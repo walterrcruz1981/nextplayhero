@@ -12,14 +12,22 @@ interface Story {
   link: string
 }
 
+async function getStories() {
+  return await fetchRssFeed() as Story[]
+}
+
 export default async function TrendingStories() {
-  const stories = await fetchRssFeed() as Story[]
+  const stories = await getStories()
+
+  if (!stories.length) {
+    return <div>No stories found</div>
+  }
 
   return (
     <section className="max-w-7xl mx-auto">
       <h2 className="text-2xl font-bold mb-6 text-gray-900">Trending in Sports</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {stories.map((story, index) => (
+        {stories.map((story) => (
           <Link 
             key={story.id}
             href={story.link}
